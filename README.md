@@ -3,10 +3,7 @@ import requests
 import os
 from urllib.parse import urlparse
 
-def download_images_from_xlsx(xlsx_filename, sheet_name, url_column, output_folder):
-    """
-    Download images from URLs in an Excel file and save them to a specified folder with real names.
-    
+def download_images_from_xlsx(xlsx_filename, sheet_name, url_column, output_folder):    
     Parameters:
     xlsx_filename (str): Path to the Excel file.
     sheet_name (str): Name of the sheet containing URLs.
@@ -15,10 +12,8 @@ def download_images_from_xlsx(xlsx_filename, sheet_name, url_column, output_fold
     """
     # Create output folder if it doesn't exist
     os.makedirs(output_folder, exist_ok=True)
-    
     # Read Excel file
     df = pd.read_excel(xlsx_filename, sheet_name=sheet_name)
-    
     for url in df[url_column].dropna():
         url = url.strip()
         try:
@@ -27,7 +22,6 @@ def download_images_from_xlsx(xlsx_filename, sheet_name, url_column, output_fold
                 # Extract filename from URL
                 parsed_url = urlparse(url)
                 filename = os.path.basename(parsed_url.path)
-                
                 # Save image with its real name
                 image_path = os.path.join(output_folder, filename)
                 with open(image_path, 'wb') as file:
@@ -37,11 +31,8 @@ def download_images_from_xlsx(xlsx_filename, sheet_name, url_column, output_fold
                 print(f" Failed to download: {url}")
         except requests.RequestException:
             print(f" Error downloading: {url}")
-
-# Example Usage
 xlsx_file = 'file.xlsx'  # Replace with your Excel filename
 sheet_name = 'Sheet1'  # Replace with your sheet name
 url_column_name = 'Image_URL'  # Replace with your column name
 output_directory = 'output_directory'  # Folder to save images
-
 download_images_from_xlsx(xlsx_file, sheet_name, url_column_name, output_directory)
